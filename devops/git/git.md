@@ -19,6 +19,13 @@ git push -f origin <分支名>  # 强制推送到远程分支
 git branch -d dev  # 删除本地dev分支
 git push origin --delete dev  # 删除远程dev分支
 
+## 丢弃、恢复修改
+git checkout file 丢弃未暂存的修改
+git clean -f 删除未跟踪的文件，不可逆
+git restore file 将修改的文件恢复到暂存区的状态
+git reset --hard HEAD^ 提交后，恢复到上一个版本
+git reset --hard [commit] 提交后，恢复到指定版本
+
 ## 暂存 stash
 git stash save "dev_csh分支的未完成工作" # 暂存当前工作区的修改
 git stash list  # 查看暂存区列表
