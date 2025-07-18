@@ -14,3 +14,14 @@ kubectl get pods -o wide  # 显示更多的pods列表信息
 k logs -f pod-name # 查看pod的日志
 kubectl exec -it pod-name -- /bin/bash # 进入pod内部
 kubectl cp /path/to/local/file pod-name:/path/to/remote/file # 复制文件到pod
+
+k get svc -n dev-io-agent # 查看service状态
+
+   kubectl logs POD名 -n dev-io-agent查询日志
+    kubectl get pods -n dev-io-agent 查看pod状态
+   kubectl get svc -n dev-io-agent 查看service状态
+      helm install io-agent io-agent/ -n dev-io-agent 安装agent
+      helm uninstall io-agent -n dev-io-agent删除所有与io-agent相关的资源
+helm upgrade io-agent io-agent/ -n dev-io-agent
+ k exec -it -n dev-io-agent io-agent-9c4cb85f8-495p8 -- /bin/bash进入容器
+  k delete pod -n dev-io-agent io-agent-7545d7d8c5-9r4tr重新加载容器
