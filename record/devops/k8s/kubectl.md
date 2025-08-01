@@ -25,3 +25,7 @@ k get svc -n dev-io-agent # 查看service状态
 helm upgrade io-agent io-agent/ -n dev-io-agent
  k exec -it -n dev-io-agent io-agent-9c4cb85f8-495p8 -- /bin/bash进入容器
   k delete pod -n dev-io-agent io-agent-7545d7d8c5-9r4tr重新加载容器
+
+  ## 删除pod
+  kubectl delete pod -n kube-system --field-selector=status.phase!=Running # 删除掉kube-system命名空间中非Running状态的pod
+  

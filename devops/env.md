@@ -73,8 +73,8 @@ EOF
 在web端查看数据，支持编辑
 1. yum install php php-sqlite3
 2. wget  https://github.com/FrancoisCapon/LoginToASqlite3DatabaseWithoutCredentialsWithAdminer/releases/download/5.3.0--2.0/adminer-5.3.0-sqlite-en.php -O adminer.php
-3. php -S 10.9.98.23:8080
-4. 浏览器访问 http://10.9.98.23:8080/adminer.php
+3. php -S 10.9.98.80:8080
+4. 浏览器访问 http://10.9.98.80:8080/adminer.php
 5. 输入数据库文件路径 /etc/zion/db/devops.db  , 登录
 
 

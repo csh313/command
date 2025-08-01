@@ -36,7 +36,13 @@ git stash apply stash@{0}  # 恢复指定暂存区的修改
 ## commit
 git commit --amend --no-edit  # 合并修改到上次提交，不修改提交信息
 git commit --amend #若需同时修改提交信息，去掉 --no-edit 参数
-git show [commit]显示提交信息
+git commit --amend -m "新的 commit 信息" # 修改上次的提交信息
+git rebase -i HEAD~n  # 将需要修改的提交前的 pick 改为 reword
+修改已经请求merge的代码可以强制推送：git push origin remote_branch -f
+git show <commit-hash> -- <file-path>  展示指定提交的某个文件内容
+git diff <commit1> <commit2>  比较两个提交之间的差异
+git show --stat <commit-hash> 显示指定提交的统计信息
+git show [commit]显示指定提交的详细信息
 git update-index --assume-unchanged 文件名 本地忽略更新
 git update-index --no-assume-unchanged 文件名 重新追踪
 
@@ -47,7 +53,47 @@ git log --oneline -3 查看最近三次提交记录
 git cherry-pick [commit 哈希值] 合并指定提交到当前分支
 git cherry-pick [commit1]..[commit2] 合并指定范围的提交到当前分支(不包含commit1，若包含就commit1^..)
 
-##log
+## 将一次提交分为多次
+1. 本地提分提交
+git log --oneline # 1. 找到需要拆分的提交哈希
+git rebase -i HEAD~1 # 2. 进入交互式变基（假设要拆分HEAD~1） # 3. 将pick改为edit，保存退出
+git reset HEAD^ # 4. 重置提交，保留修改
+git add . git commit -m "" # 5. 提交多次
+git rebase --continue# 7. 完成变基
+git push origin dev -f # 8. 强制推送到远程
+
+## 删除以前的提交
+1. 想删除提交但保留提交的代码更改 git reset + git push -f
+git log --oneline # 1. 查看提交历史，确定要删除到哪个提交
+git reset --soft HEAD~N  # N为要删除的提交数量 # 2. 重置HEAD到目标提交（保留工作区修改）
+git commit -m "提交信息" # 3. 提交新更改
+git push -f origin dev # 4. 强制推送到远程
+
+2. 彻底删除提交和代码更改  git rebase -i + drop
+git rebase -i HEAD~N  # N足够大以包含要删除的提交 # 1. 进入交互式变基，选择要删除的提交
+2.2 #   - 将要删除的提交前的`pick`改为`drop` - 保存并退出
+git push -f origin <branch-name># 3. 强制推送到远程
+
+## 获取某个分支的提交到自己的分支上
+1. git cherry-pick（选择性合并提交）
+git checkout myself_branch # 1.切换到自己的分支
+git log other_branch --oneline # 2. 查看需要获取的分支的提交记录
+git cherry-pick [commit 哈希值] # 3. 选择需要获取的提交，合并到自己的分支
+git add . # 4. 解决冲突，添加需要的文件
+git cherry-pick --continue # 5. 完成合并
+
+2. git rebase（合并整个分支）
+git checkout myself_branch # 1. 切换到自己的分支
+git rebase other_branch # 2. 合并其他分支到自己的分支(将 other-branch 的所有提交应用到当前分支)
+git add . # 3. 解决冲突，添加需要的文件
+git rebase --continue # 4. 完成合并
+
+3. git merge（合并整个分支）
+git checkout myself_branch # 1. 切换到自己的分支
+git merge other_branch # 2. 将另一个分支的所有变更一次性合并到当前分支
+
+
+## log
 git log --oneline -3 查看最近三次提交记录
 git log --oneline --graph 查看分支合并图
 git log 查看所有提交记录
