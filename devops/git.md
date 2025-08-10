@@ -26,6 +26,15 @@ git restore file 将修改的文件恢复到暂存区的状态
 git reset --hard HEAD^ 提交后，恢复到上一个版本
 git reset --hard [commit] 提交后，恢复到指定版本
 
+## 误删提交
+git reflog # 查看本地所有操作记录
+```
+a1b2c3d (HEAD -> main) HEAD@{0}: reset: moving to HEAD^
+e4f5g6h HEAD@{1}: commit: 这是你误删的提交信息  # 注意这个哈希值 e4f5g6h
+```
+git reset --hard e4f5g6h  # 替换为你找到的哈希值
+
+
 ## 暂存 stash
 git stash save "dev_csh分支的未完成工作" # 暂存当前工作区的修改
 git stash list  # 查看暂存区列表
@@ -73,6 +82,22 @@ git push -f origin dev # 4. 强制推送到远程
 git rebase -i HEAD~N  # N足够大以包含要删除的提交 # 1. 进入交互式变基，选择要删除的提交
 2.2 #   - 将要删除的提交前的`pick`改为`drop` - 保存并退出
 git push -f origin <branch-name># 3. 强制推送到远程
+
+3. 删除以前的某次提交
+git log --oneline # 1. 查看提交历史，确定要删除到哪个提交
+```plaintext
+7404cb1  <-  cceb2ab  <-  c951fce (当前HEAD)
+#如删除 cceb2ab
+```
+git rebase -i 7404cb1 # 启动交互式变基  将 cceb2ab 前面的 pick 改为 drop，保存退出
+```
+pick cceb2ab api user：改进apiuser判断请求参数逻辑
+pick c951fce router：重构api handler的路径定义
+```
+git add . # 如有冲突则解决冲突，添加需要的文件
+git rebase --continue # 继续完成变基
+git log --oneline # 验证提交记录
+git push -f origin dev #  若已推送，则强制推送到远程
 
 ## 获取某个分支的提交到自己的分支上
 1. git cherry-pick（选择性合并提交）

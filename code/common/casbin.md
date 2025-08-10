@@ -106,7 +106,6 @@ Model 包含了三个核心元素：
         - Delete：删除
         - Execute：执行
         
-
 6. Matchers（匹配器） ：定义如何匹配策略和请求
 Matchers 是 Casbin 的策略匹配器，用于匹配策略和请求。
 6. Matchers（匹配器） ：定义如何匹配策略和请求
@@ -147,4 +146,60 @@ sequenceDiagram
     E-->>P: 验证结果
     P-->>I: AuthResult
     I-->>U: 允许/拒绝访问
+```
+### Enforcer是用于授权实施和策略管理的实施者
+```go
+# 通过文件或DB创建一个enforcer
+e, _ := casbin.NewEnforcer("path/to/basic_model.conf", "path/to/basic_policy.csv")
+a, _ := gormadapter.NewAdapter("mysql", "root:root@xx@tcp(xxx:3306)/study", true)
+e, err := casbin.NewEnforcer("configs/auth_model.conf", a)
+```
+1. 获取policys：
+    func (e Enforcer) GetPolicy() [][]string 获取策略中的所有授权规则
+    func (e Enforcer) GetNamedPolicy(ptype string) [][]string 获取给定命名策略中的所有授权规则
+2. 清空policys：
+    func (e Enforcer) ClearPolicy() error 清空策略中的所有授权规则
+3. RBAC API：
+验证
+```go
+    func (e *Enforcer) Enforce(rvals …interface{}) (bool, error)#execution决定一个“subject”是否可以通过操作“action”访问一个“object”，输入参数通常是:(sub, obj, act)。
+```
+增加policy：
+```go
+ok, err := e.AddPolicy("admin", "/api/nowtime", "GET") #添加一个策略，如果规则已经存在，函数返回false，并且不会添加规则。
+
+ok, err := e.AddNamedPolicy("p", "admin", "/api/nowtime", "GET") # 将授权规则添加到当前命名策略。如果规则已经存在，函数将返回false，并且规则将不被添加。否则，函数将通过添加新规则返回true
+
+func (e *Enforcer) AddPolicies(rules [][]string) (bool, error) # 批量增加policy 
+```
+删除policy：
+```go
+ok, err := e.RemovePolicy("alice", "data1", "read")#RemovePolicy从当前策略中删除授权规则
+
+ok, err := e.RemoveNamedPolicy("p", "alice", "data1", "read") # 从给定命名策略中删除授权规则
+func (e *Enforcer) RemovePolicies(rules [][]string) (bool, error) #批量删除policy 
+
+func (e *Enforcer) RemoveNamedPolicies(ptype string, rules [][]string) (bool, error) #批量删除policy
+```
+更新policy:
+```go
+func (e Enforcer) UpdatePolicy(oldPolicy []string, newPolicy []string) (bool, error)
+func (e Enforcer) UpdateNamedPolicy(ptype string, p1 []string, p2 []string) (bool, error)
+
+updated, err := e.UpdatePolicy([]string{"eve", "data3", "read"}, []string{"eve", "data3", "write"})
+```
+加载policy:
+```go
+func (e *Enforcer) LoadPolicy() error #加载策略，初始化做一次就ok。增加，修改，删除，不用重新加载
+```
+保存policy：
+```go
+func (e *Enforcer) SavePolicy() error SavePolicy保存当前的策略
+```
+
+实现流程：
+```go
+a, _ := gormadapter.NewAdapter("mysql", "root:root@xx@tcp(xxx:3306)/study", true)
+e, err := casbin.NewEnforcer("configs/auth_model.conf", a)
+e.LoadPolicy()
 ```
