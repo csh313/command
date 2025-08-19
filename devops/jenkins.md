@@ -9,16 +9,7 @@ chown -R 1000:1000 /home/csh/devops/jenkins_data # 赋予权限（Jenkins 容器
 ```
 ### 启动容器
 ```bash
-docker run -d \
-  --name jenkins-lts \
-  -p 8000:8080 \
-  -p 50000:50000 \
-  -v /home/csh/devops/jenkins_data:/var/jenkins_home \  # 你的数据挂载路径
-  --dns 8.8.8.8 \  # 谷歌 DNS
-  --dns 114.114.114.114 \  # 国内 DNS
-  -e JENKINS_OPTS="--update-center https://mirrors.aliyun.com/jenkins/update-center.json" \  # 强制阿里云镜像源
-  jenkins/jenkins:lts
-docker run -d --name jenkins-lts -p 8000:8080 -p 50000:50000  -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock  --restart always   jenkins/jenkins:lts
+docker run -d --name jenkins -p 8000:8080 -p 50000:50000 -v /root/devops/jenkins_home:/var/jenkins_home --restart always jenkins/jenkins:lts
 ```
 ### 初始化 Jenkins 界面
 1. 获取初始密码

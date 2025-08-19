@@ -13,7 +13,7 @@ docker rm $(docker ps -aq)
 
 # 删除所有容器
 docker stop $(docker ps -aq) && docker rm $(docker ps -aq)
-
+docker rmi $(docker images -aq)
 # 打包镜像
 docker build -f ./deployments/docker/Dockerfile.release .
 # 启动容器

@@ -128,6 +128,23 @@ git log 查看所有提交记录
     git cherry-pick --continue 解决冲突后继续rebase。
 
 
+## 忽略某个文件的后续更改
+### 方法1： git update-index --assume-unchanged 文件名
+git update-index --no-assume-unchanged <文件路径>  # 重新追踪文件
+### 方法2： git config --global core.excludesfile ~/.gitignore_global
+在 ~/.gitignore_global 文件中添加需要忽略的文件路径，如：
+```
+     # 忽略所有.a文件
+     *.a
+     # 忽略所有.o文件
+     *.o
+```
+### 方法3：添加.gitignore文件
+git rm --cached <文件路径> # 先从 Git 索引移除，但保留本地文件
+git add .gitignore # 添加.gitignore 文件到暂存区
+git commit -m "添加.gitignore 文件" # 提交.gitignore 文件
+
+
 ## git常用命令：
 vim ~/.bashrc
 alias g='git '
