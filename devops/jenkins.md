@@ -5,7 +5,7 @@ docker pull jenkins/jenkins:lts
 ### 创建本地数据目录
 ```bash
 mkdir -p /home/csh/devops/jenkins_data  # 替换为你的用户目录，如 /home/你的用户名/jenkins_data 创建目录（Linux/WSL 路径示例，Windows 可替换为 D:\jenkins 等）
-chown -R 1000:1000 /home/csh/devops/jenkins_data # 赋予权限（Jenkins 容器内用户 UID 为 1000，需保证目录有权限）
+chown -R 1000:1000 /root/devops/jenkins_data # 赋予权限（Jenkins 容器内用户 UID 为 1000，需保证目录有权限）
 ```
 ### 启动容器
 ```bash

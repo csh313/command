@@ -1,0 +1,9 @@
+```go
+mid:=slow.Next
+slow.Next=nil
+/*
+为什么slow.Next=nil后不影响mid呢？
+因为slow.Next=nil将slow的下一个节点指针置为空，
+而mid已经保存了slow.Next的位置，所以不会受到影响。
+*/
+```
